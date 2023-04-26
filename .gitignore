@@ -2,3 +2,5 @@
 *.jar
 *.class
 *.pdf
+.metals
+.vscode
