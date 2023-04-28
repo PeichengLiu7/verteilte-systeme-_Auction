@@ -4,3 +4,5 @@
 *.pdf
 .metals
 .vscode
+out
+.idea
