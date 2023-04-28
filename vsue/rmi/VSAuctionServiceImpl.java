@@ -86,7 +86,7 @@ public class VSAuctionServiceImpl implements VSAuctionService {
                     higher = true;
                     VSAuction updatedAuction = new VSAuction(current.getName(), price);
                     runningAuctions.set(index, updatedAuction);
-                    handler.handleEvent(VSAuctionEventType.HIGHER_BID, updatedAuction);
+                    auctionBidderPair.get(current).handleEvent(VSAuctionEventType.HIGHER_BID, updatedAuction);
                     auctionBidderPair.remove(current);
                     auctionBidderPair.put(updatedAuction, handler);
                 }
