@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VSAuctionServiceImpl implements VSAuctionService{
+public class VSAuctionServiceImpl implements VSAuctionService {
+
     List<VSAuction> runningAuctions = new LinkedList<VSAuction>();
     HashMap<VSAuction, VSAuctionEventHandler> auctionBidderPair = new HashMap<VSAuction, VSAuctionEventHandler>();
 
     @Override
-    public void registerAuction(VSAuction auction, int duration, VSAuctionEventHandler handler)
+    public synchronized void registerAuction(VSAuction auction, int duration, VSAuctionEventHandler handler)
             throws VSAuctionException, RemoteException {
         // check duplicate
         while (runningAuctions.iterator().hasNext()) {
@@ -58,7 +59,7 @@ public class VSAuctionServiceImpl implements VSAuctionService{
         }).start();
     }
 
-    private void endAuction(VSAuction auctionToEnd, VSAuctionEventHandler handler) throws RemoteException{
+    private synchronized void endAuction(VSAuction auctionToEnd, VSAuctionEventHandler handler) throws RemoteException{
         handler.handleEvent(VSAuctionEventType.AUCTION_END, auctionToEnd);
         auctionBidderPair.get(auctionToEnd).handleEvent(VSAuctionEventType.AUCTION_WON, auctionToEnd);
         runningAuctions.remove(auctionToEnd);
@@ -71,7 +72,7 @@ public class VSAuctionServiceImpl implements VSAuctionService{
     }
 
     @Override
-    public boolean placeBid(String userName, String auctionName, int price, VSAuctionEventHandler handler)
+    public synchronized boolean placeBid(String userName, String auctionName, int price, VSAuctionEventHandler handler)
             throws VSAuctionException, RemoteException {
         boolean auctionExists = false, higher = false;
         int index = 0;
@@ -84,7 +85,7 @@ public class VSAuctionServiceImpl implements VSAuctionService{
                     // new bid
                     higher = true;
                     VSAuction updatedAuction = new VSAuction(current.getName(), price);
-                    runningAuctions.add(index, updatedAuction);
+                    runningAuctions.set(index, updatedAuction);
                     handler.handleEvent(VSAuctionEventType.HIGHER_BID, updatedAuction);
                     auctionBidderPair.remove(current);
                     auctionBidderPair.put(updatedAuction, handler);
