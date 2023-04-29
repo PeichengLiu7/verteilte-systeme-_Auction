@@ -3,12 +3,15 @@ package vsue.rmi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 
 
 public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler {
 
 	// The user name provided via command line.
 	private final String userName;
+	private VSAuctionService auctionService;
 
 
 	public VSAuctionRMIClient(String userName) {
@@ -20,16 +23,25 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 	// # INITIALIZATION & SHUTDOWN #
 	// #############################
 
+
 	public void init(String registryHost, int registryPort) {
 		/*
 		 * TODO: Implement client startup code
 		 */
+		try {
+			String rmiUrl = String.format("//%s:%d/VSAuctionService", registryHost, registryPort);
+			auctionService = (VSAuctionService) Naming.lookup(rmiUrl);
+		} catch (Exception e) {
+			System.err.println("Failed to connect to server: " + e.getMessage());
+			System.exit(1);
+		}
 	}
 
 	public void shutdown() {
 		/*
 		 * TODO: Implement client shutdown code
 		 */
+
 	}
 
 
