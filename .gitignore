@@ -4,3 +4,6 @@
 *.pdf
 .metals
 .vscode
+out
+.idea
+*.iml

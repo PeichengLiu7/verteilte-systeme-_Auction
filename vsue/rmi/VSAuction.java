@@ -1,7 +1,8 @@
 package vsue.rmi;
 
+import java.io.Serializable;
 
-public class VSAuction {
+public class VSAuction implements Serializable {
 
 	/* The auction name. */
 	private final String name;
