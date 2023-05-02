@@ -18,6 +18,7 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 
 	// The user name provided via command line.
 	private final String userName;
+	private VSAuctionService auctionService;
 
 
 
