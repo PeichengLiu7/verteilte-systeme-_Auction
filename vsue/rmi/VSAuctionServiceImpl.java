@@ -1,25 +1,27 @@
 package vsue.rmi;
 
-import java.io.IOError;
-import java.net.http.WebSocket.Listener;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VSAuctionServiceImpl implements VSAuctionService{
+public class VSAuctionServiceImpl implements VSAuctionService {
+
     List<VSAuction> runningAuctions = new LinkedList<VSAuction>();
-    HashMap<VSAuction, VSAuctionEventHandler> auctionHandlerPair = new HashMap<VSAuction, VSAuctionEventHandler>();
+    HashMap<VSAuction, VSAuctionEventHandler> auctionBidderPair = new HashMap<VSAuction, VSAuctionEventHandler>();
 
     @Override
-    public void registerAuction(VSAuction auction, int duration, VSAuctionEventHandler handler)
+    public synchronized void registerAuction(VSAuction auction, int duration, VSAuctionEventHandler handler)
             throws VSAuctionException, RemoteException {
         // check duplicate
-        if(runningAuctions.contains(auction)){
-            throw new VSAuctionException("Auction already exists");
+        while (runningAuctions.iterator().hasNext()) {
+            VSAuction current = runningAuctions.iterator().next();
+            if(current.getName().equals(auction.getName())){
+                throw new VSAuctionException("Auction already exists");
+            }
         }
         runningAuctions.add(auction);
-        auctionHandlerPair.put(auction, handler);
+        auctionBidderPair.put(auction, handler);
         
         // start async timer for auction
         endAuctionIn(auction.getName(), duration, handler);
@@ -36,7 +38,7 @@ public class VSAuctionServiceImpl implements VSAuctionService{
                 }
 
                 // GET AUCTION
-                VSAuction auctionToEnd = new VSAuction("POISON", 0);
+                VSAuction auctionToEnd = new VSAuction("DUMMY", 0);
                 while(runningAuctions.iterator().hasNext()){
                     VSAuction current = runningAuctions.iterator().next();
                     if(current.getName().equals(auctionName)){
@@ -57,11 +59,11 @@ public class VSAuctionServiceImpl implements VSAuctionService{
         }).start();
     }
 
-    private void endAuction(VSAuction auctionToEnd, VSAuctionEventHandler handler) throws RemoteException{
+    private synchronized void endAuction(VSAuction auctionToEnd, VSAuctionEventHandler handler) throws RemoteException{
         handler.handleEvent(VSAuctionEventType.AUCTION_END, auctionToEnd);
-        auctionHandlerPair.get(auctionToEnd).handleEvent(VSAuctionEventType.AUCTION_WON, auctionToEnd);
+        auctionBidderPair.get(auctionToEnd).handleEvent(VSAuctionEventType.AUCTION_WON, auctionToEnd);
         runningAuctions.remove(auctionToEnd);
-        auctionHandlerPair.remove(auctionToEnd);
+        auctionBidderPair.remove(auctionToEnd);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class VSAuctionServiceImpl implements VSAuctionService{
     }
 
     @Override
-    public boolean placeBid(String userName, String auctionName, int price, VSAuctionEventHandler handler)
+    public synchronized boolean placeBid(String userName, String auctionName, int price, VSAuctionEventHandler handler)
             throws VSAuctionException, RemoteException {
         boolean auctionExists = false, higher = false;
         int index = 0;
@@ -83,10 +85,10 @@ public class VSAuctionServiceImpl implements VSAuctionService{
                     // new bid
                     higher = true;
                     VSAuction updatedAuction = new VSAuction(current.getName(), price);
-                    runningAuctions.add(index, updatedAuction);
-                    handler.handleEvent(VSAuctionEventType.HIGHER_BID, updatedAuction);
-                    auctionHandlerPair.remove(current);
-                    auctionHandlerPair.put(updatedAuction, handler);
+                    runningAuctions.set(index, updatedAuction);
+                    auctionBidderPair.get(current).handleEvent(VSAuctionEventType.HIGHER_BID, updatedAuction);
+                    auctionBidderPair.remove(current);
+                    auctionBidderPair.put(updatedAuction, handler);
                 }
                 break;
             }
