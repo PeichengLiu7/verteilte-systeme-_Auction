@@ -12,13 +12,21 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 	// The user name provided via command line.
 	private final String userName;
 	private VSAuctionService auctionService;
+//这里的RemoteException是为了防止handleEvent被修改
+	// ################
+	// # CONSTRUCTORS #
 
 
 	public VSAuctionRMIClient(String userName) {
 		this.userName = userName;
 	}
 
-
+//功能：初始化客户端
+//参数：registryHost：注册表主机名
+//参数：registryPort：注册表端口号
+//返回值：无
+//异常：无
+//注释：无
 	// #############################
 	// # INITIALIZATION & SHUTDOWN #
 	// #############################
@@ -34,6 +42,10 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 		} catch (Exception e) {
 			System.err.println("Failed to connect to server: " + e.getMessage());
 			System.exit(1);
+			//功能：连接到服务器
+//参数：registryHost：注册表主机名
+//参数：registryPort：注册表端口号
+//返回值：无
 		}
 	}
 
@@ -123,6 +135,10 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 			throw new IllegalArgumentException("Unknown command: " + args[0] + "\nUse \"help\" to list available commands");
 		}
 		return true;
+		//含义：处理命令
+//参数：args：命令参数
+//返回值：无
+//异常：无
 	}
 
 
@@ -139,6 +155,11 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 		if (args.length < 3) {
 			System.err.println("usage: java " + VSAuctionRMIClient.class.getName() + " <user-name> <registry_host> <registry_port>");
 			System.exit(1);
+			//功能：检查参数
+//参数：args：命令参数
+//返回值：无
+//异常：无
+
 		}
 	}
 
@@ -151,5 +172,7 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 		client.init(registryHost, registryPort);
 		client.shell();
 		client.shutdown();
+		//功能：创建并执行客户端
+//参数：args：命令参数
 	}
 }
