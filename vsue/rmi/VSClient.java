@@ -20,7 +20,9 @@ public class VSClient {
             VSClient client = new VSClient("localhost", 12345);
 
             // Send test data to the server
-            String testData = "Hello, server!";
+//            String testData = "Hello, server!";
+
+            int testData = 12345;
             System.out.println("Sending data: " + testData);
             Object response = client.sendAndReceiveObject(testData);
 
