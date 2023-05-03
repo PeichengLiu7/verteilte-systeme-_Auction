@@ -13,5 +13,7 @@ public interface VSAuctionEventHandler extends Remote {
 	 * @param auction The auction
 	 */
 	public void handleEvent(VSAuctionEventType event, VSAuction auction) throws RemoteException;
+//这里的RemoteException是为了防止handleEvent被修改
+
 
 }

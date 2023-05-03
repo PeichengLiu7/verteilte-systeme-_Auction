@@ -10,15 +10,21 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.List;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler, Remote {
+
 
 	private VSAuctionService service;
 
 	// The user name provided via command line.
 	private final String userName;
-	private VSAuctionService auctionService;
+
 
 
 
@@ -81,6 +87,7 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 		}
 	}
 
+
 	public void list(){
 		System.out.println("RUNNING AUCTIONS:");
 		VSAuction[] runningAuctions = new VSAuction[0];
@@ -115,41 +122,41 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 
 	protected boolean processCommand(String[] args) {
 		switch (args[0]) {
-		case "help":
-		case "h":
-			System.out.println("The following commands are available:\n"
-					+ "  help\n"
-					+ "  bid <auction-name> <price>\n"
-					+ "  list\n"
-					+ "  register <auction-name> <duration> [<starting-price>]\n"
-					+ "  quit"
-			);
-			break;
-		case "register":
-		case "r":
-			if (args.length < 3)
-				throw new IllegalArgumentException("Usage: register <auction-name> <duration> [<starting-price>]");
-			int duration = Integer.parseInt(args[2]);
-			int startingPrice = (args.length > 3) ? Integer.parseInt(args[3]) : 0;
-			register(args[1], duration, startingPrice);
-			break;
-		case "list":
-		case "l":
-			list();
-			break;
-		case "bid":
-		case "b":
-			if (args.length < 3) throw new IllegalArgumentException("Usage: bid <auction-name> <price>");
-			int price = Integer.parseInt(args[2]);
-			bid(args[1], price);
-			break;
-		case "exit":
-		case "quit":
-		case "x":
-		case "q":
-			return false;
-		default:
-			throw new IllegalArgumentException("Unknown command: " + args[0] + "\nUse \"help\" to list available commands");
+			case "help":
+			case "h":
+				System.out.println("The following commands are available:\n"
+						+ "  help\n"
+						+ "  bid <auction-name> <price>\n"
+						+ "  list\n"
+						+ "  register <auction-name> <duration> [<starting-price>]\n"
+						+ "  quit"
+				);
+				break;
+			case "register":
+			case "r":
+				if (args.length < 3)
+					throw new IllegalArgumentException("Usage: register <auction-name> <duration> [<starting-price>]");
+				int duration = Integer.parseInt(args[2]);
+				int startingPrice = (args.length > 3) ? Integer.parseInt(args[3]) : 0;
+				register(args[1], duration, startingPrice);
+				break;
+			case "list":
+			case "l":
+				list();
+				break;
+			case "bid":
+			case "b":
+				if (args.length < 3) throw new IllegalArgumentException("Usage: bid <auction-name> <price>");
+				int price = Integer.parseInt(args[2]);
+				bid(args[1], price);
+				break;
+			case "exit":
+			case "quit":
+			case "x":
+			case "q":
+				return false;
+			default:
+				throw new IllegalArgumentException("Unknown command: " + args[0] + "\nUse \"help\" to list available commands");
 		}
 		return true;
 	}
@@ -182,3 +189,5 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 		client.shutdown();
 	}
 }
+
+
