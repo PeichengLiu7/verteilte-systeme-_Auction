@@ -33,10 +33,20 @@ public class VSServer {
                     Object receivedObject = objectConnection.receiveObject();
                     objectConnection.sendObject((Serializable) receivedObject);
                 }
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-}
 
+    public static void main(String[] args) {
+        try {
+            int serverPort = 12345;
+            VSServer server = new VSServer(serverPort);
+            System.out.println("Server is running on port " + serverPort);
+            server.start();
+        } catch (IOException e) {
+            System.err.println("Error while starting the server: " + e.getMessage());
+        }
+    }
+}

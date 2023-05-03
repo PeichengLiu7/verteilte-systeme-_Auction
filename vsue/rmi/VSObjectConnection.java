@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class VSObjectConnection {
     private VSConnection vsConnection;
@@ -14,6 +15,16 @@ public class VSObjectConnection {
         vsConnection = new VSConnection(socket);
     }
 
+//    public void sendObject(Serializable object) throws IOException {
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+//        objectOutputStream.writeObject(object);
+//        objectOutputStream.close();
+//
+//        byte[] serializedObject = byteArrayOutputStream.toByteArray();
+//        vsConnection.sendChunk(serializedObject);
+//    }
+    //1.2.4
     public void sendObject(Serializable object) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
@@ -22,7 +33,25 @@ public class VSObjectConnection {
 
         byte[] serializedObject = byteArrayOutputStream.toByteArray();
         vsConnection.sendChunk(serializedObject);
+
+        // Print serialized data as hexadecimal values
+        int bytes = 0;
+        for (byte b : serializedObject) {
+            System.out.print(Integer.toHexString(b & 0xFF) + " ");
+            bytes++;
+        }
+        System.out.println();
+        System.out.println("Total bytes: " + bytes);
+        System.out.println();
+
+        // Print serialized data as a string
+        String serializedString = new String(serializedObject, StandardCharsets.UTF_8);
+        System.out.println("Serialized string: " + serializedString);
+
+        System.out.println();
+        System.out.println();
     }
+
 
     public Serializable receiveObject() throws IOException, ClassNotFoundException {
         byte[] serializedObject = vsConnection.receiveChunk();

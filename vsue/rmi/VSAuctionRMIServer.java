@@ -17,3 +17,4 @@ public class VSAuctionRMIServer {
     Thread.sleep(Long.MAX_VALUE);
   }
 }
+

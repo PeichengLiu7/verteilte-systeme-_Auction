@@ -14,4 +14,5 @@ public interface VSAuctionEventHandler extends Remote {
 	 */
 	public void handleEvent(VSAuctionEventType event, VSAuction auction) throws RemoteException;
 
+
 }

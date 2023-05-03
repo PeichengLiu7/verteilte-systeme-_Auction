@@ -24,6 +24,7 @@ public interface VSAuctionService extends Remote {
 	 */
 	public VSAuction[] getAuctions() throws RemoteException;
 
+
 	/**
 	 * Places a new bid.
 	 *
