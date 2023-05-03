@@ -17,7 +17,7 @@ public class VSClient {
     }
     public static void main(String[] args) {
         try {
-            VSClient client = new VSClient("localhost", 12345);
+            VSClient client = new VSClient("cip6a2.cip.cs.fau.de", 12345);
 
             // Send test data to the server
 //            String testData = "Hello, server!";

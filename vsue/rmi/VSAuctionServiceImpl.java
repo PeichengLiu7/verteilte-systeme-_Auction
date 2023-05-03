@@ -76,8 +76,7 @@ public class VSAuctionServiceImpl implements VSAuctionService {
             throws VSAuctionException, RemoteException {
         boolean auctionExists = false, higher = false;
         int index = 0;
-        while(runningAuctions.iterator().hasNext()){
-            VSAuction current = runningAuctions.iterator().next();
+        for(VSAuction current : runningAuctions){
             if(current.getName().equals(auctionName)){
                 // this is the one
                 auctionExists = true;
