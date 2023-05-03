@@ -62,6 +62,7 @@ public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler
 		switch(event){
 			case AUCTION_END:
 				//含义：这里的auction是为了防止auction被修改
+				//这里的auction是为了防止auction被修改
 				System.out.println("AUCTION " + auction.getName() + " HAS ENDED");
 				break;
 			case AUCTION_WON:
