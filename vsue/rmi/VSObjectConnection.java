@@ -23,8 +23,6 @@ public class VSObjectConnection {
 //
 //        byte[] serializedObject = byteArrayOutputStream.toByteArray();
 //        vsConnection.sendChunk(serializedObject);
-//        //这里的sendChunk是VSConnection里的sendChunk
-//        //这里的sendChunk是VSConnection里的sendChunk
 //    }
     //1.2.4
     public void sendObject(Serializable object) throws IOException {

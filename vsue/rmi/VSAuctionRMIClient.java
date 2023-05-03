@@ -1,6 +1,6 @@
 package vsue.rmi;
 
-import java.io.Serializable;
+
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -8,13 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedList;
-import java.util.List;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.LinkedList;
-import java.util.List;
+
 
 
 public class VSAuctionRMIClient extends VSShell implements VSAuctionEventHandler, Remote {

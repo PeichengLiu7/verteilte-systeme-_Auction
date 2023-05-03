@@ -23,9 +23,7 @@ public interface VSAuctionService extends Remote {
 	 * @return The auctions currently in progress.
 	 */
 	public VSAuction[] getAuctions() throws RemoteException;
-	//1.这里的RemoteException是为了防止getAuctions被修改
-	//2.这里的VSAuction[]是为了防止getAuctions被修改
-	//3.这里的getAuctions是为了防止getAuctions被修改
+
 
 	/**
 	 * Places a new bid.
